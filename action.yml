@@ -1,0 +1,52 @@
+name: ngx-uptodate
+description: Keeps your Angular CLI projects up-to-date via automated pull requests based on `ng update`
+author: Tine Kondo
+inputs:
+# Core options
+  base-branch:
+    description: The base branch the PRs will be created from
+    default: master
+    required: true
+  project-path:
+    description: The path to Angular CLI project. Relative to root diredctory('./')
+    default: ./
+    required: true
+  repo-token:
+    description: The GITHUB_TOKEN secret
+    required: true
+  npm-registry:
+    description: The NPM registry to use
+    default:
+
+# Options to customize the PR
+  pr-branch-prefix:
+    description: The prefix of the PR branch name
+    default: chore-ng-update-
+  pr-title:
+    description: The title of the PR. Will also be the message of the related PR commit
+    default: 'chore(ng-update): update angular dependencies'
+  pr-body:
+    description: The body of the PR
+    default: |
+      `ngx-uptodate`🤖 has automatically run `ng update` for you and baked this hot 🔥 PR , ready to merge.
+
+      <details>
+        <summary>Ng Update Output:</summary>
+          ${ngUpdateOutput}
+        </summary>
+      </details>
+  pr-labels:
+    description: The labels that should be added to the PR(comma separated)
+    default: ng-update, automated pr
+  pr-assignees:
+    description : The users that should be assigned to the PR(comma separated)
+    default :
+  pr-reviewers:
+    description: The users that should review the PR(comma separated)
+    default:
+outputs:
+  pr-number:
+    description: The number of the created/updated PR
+runs:
+  using: node12
+  main: lib/main.js
