@@ -1,0 +1,31 @@
+name: "Update Angular Action"
+on: 
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: '0 */8 * * *'
+
+jobs:
+  ngxUptodate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+        with:
+          ref: develop
+
+      - name: Set-up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+
+      - name: Installing NPM modules
+        run: npm ci
+
+      - name: Updating ng dependencies
+        uses: ./
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          base-branch: develop
+          project-path: ./demo
