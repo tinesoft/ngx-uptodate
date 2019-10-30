@@ -1,13 +1,11 @@
-name: "Update Angular Action"
+name: "Release Action"
 on: 
   push:
     branches:
-      - develop
-  schedule:
-    - cron: '0 */8 * * *'
+      - master
 
 jobs:
-  ngxUptodate:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -23,9 +21,7 @@ jobs:
       - name: Installing NPM modules
         run: npm ci
 
-      - name: Updating ng dependencies
-        uses: ./
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          base-branch: develop
-          project-path: ./demo
+      - name: Releasing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
