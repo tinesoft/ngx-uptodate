@@ -54,3 +54,6 @@ outputs:
 runs:
   using: node12
   main: lib/main.js
+branding:
+  icon: 'arrow-up'
+  color: 'red'
