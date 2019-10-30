@@ -5,7 +5,8 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "@commitlint/config-conventional": "^8.2.0",
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.4",
+    "@types/yargs": "^13.0.3",
     "del": "^5.1.0",
     "glob": "^7.1.4",
     "gulp": "^4.0.2",
@@ -47,8 +49,10 @@
     "jest-circus": "^24.9.0",
     "object-hash": "^2.0.0",
     "pump": "^3.0.0",
+    "semantic-release": "^15.13.28",
     "ts-jest": "^24.1.0",
     "typescript": "^3.5.1",
+    "yargs": "^14.2.0",
     "zyan-gulp-coveralls": "^0.1.7"
   },
   "babel": {
@@ -64,5 +68,13 @@
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "release": {
+    "plugins": ["@semantic-release/commit-analyzer", "@semantic-release/release-notes-generator", "@semantic-release/github"],
+    "pkgRoot": "lib",
+    "assets": [
+      "lib/*.zip",
+      "lib/*.tar.gz"
+    ]
   }
 }

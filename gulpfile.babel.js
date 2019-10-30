@@ -4,9 +4,17 @@ import del from 'del';
 import jest from 'jest';
 import { join, resolve} from 'path';
 import { lstatSync, readdirSync }  from 'fs';
+import simplegit from 'simple-git';
+import yargs from 'yargs';
 
 import gulpCoveralls from 'zyan-gulp-coveralls';
 import { execExternalCmd } from './utility/helpers';
+
+const argv = yargs.option('tagName',{
+  alias:'t',
+  type: 'string',
+  description: 'The tag name'
+}).argv;
 
 const config = {
   srcDir: 'src',
@@ -15,6 +23,13 @@ const config = {
   coverageDir: 'coverage',
   indentSpaces: 2
 };
+
+// Git 
+const repoDir = __dirname;
+const repoToken = process.env.GITHUB_TOKEN;
+const remoteUrl = `https://x-access-token:${repoToken}@github.com/tinesoft/ngx-uptodate`;
+const authorName = 'ngx-uptodate[bot]';
+const authorEmail = `ngx-uptodate@users.noreply.github.com`;
 
 // Cleaning tasks
 export const cleanBuild = () => del([config.buildDir]);
@@ -75,8 +90,16 @@ export const resetFixtures = async () => {
       await execExternalCmd('git', `checkout HEAD -- ${fixtureDir}/`);
       await execExternalCmd('git', `clean -fd ${fixtureDir}/`);
   });
-
 };
 resetFixtures.description = `Reset the fixtures to their initial git status`;
+
+export const updateTag = async()=>{
+  const tagName = yargs.tagName;
+  const shortTagName = tagName.slice(0, tagName.indexOf('.'));
+  const gitService = await GitService.init(repoDir, remoteUrl, authorName, authorEmail);
+  await gitService.raw(['tag', '-fa', tagName, '-m',`chore(release): update tag '${shortTagName}' to latest version '${tagName}'`])
+  await gitService.push(tagName, true);
+}
+updateTag.description = `Update the given tag to latest version`;
 
 export default build; //default task
