@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import * as path from 'path';
-import { PullRequestService as GithubService } from './github.service';
+import { GithubService } from './github.service';
 import { NgUpdateService } from './ngupdate.service';
 import { GitService } from './git.service';
 import { Helpers } from './helpers';

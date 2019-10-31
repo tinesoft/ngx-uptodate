@@ -5,7 +5,7 @@ import * as helpers from './helpers';
 import Octokit = require('@octokit/rest');
 
 
-export class PullRequestService {
+export class GithubService {
 
   private owner: string;
   private repo: string;
