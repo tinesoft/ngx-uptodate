@@ -1,9 +1,6 @@
 import * as core from '@actions/core';
 import { GitHub } from '@actions/github';
 import { Context } from '@actions/github/lib/context';
-import * as helpers from './helpers';
-import Octokit = require('@octokit/rest');
-
 
 export class GithubService {
 
