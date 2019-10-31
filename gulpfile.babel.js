@@ -4,10 +4,10 @@ import del from 'del';
 import jest from 'jest';
 import { join, resolve} from 'path';
 import { lstatSync, readdirSync }  from 'fs';
-import simplegit from 'simple-git';
 import yargs from 'yargs';
 
 import gulpCoveralls from 'zyan-gulp-coveralls';
+import { GitService } from './lib/git.service';
 import { execExternalCmd } from './utility/helpers';
 
 const argv = yargs.option('tagName',{
@@ -26,7 +26,7 @@ const config = {
 
 // Git 
 const repoDir = __dirname;
-const repoToken = process.env.GITHUB_TOKEN;
+const repoToken = process.env.GITHUB_TOKEN || process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN;
 const remoteUrl = `https://x-access-token:${repoToken}@github.com/tinesoft/ngx-uptodate`;
 const authorName = 'ngx-uptodate[bot]';
 const authorEmail = `ngx-uptodate@users.noreply.github.com`;
@@ -94,11 +94,23 @@ export const resetFixtures = async () => {
 resetFixtures.description = `Reset the fixtures to their initial git status`;
 
 export const updateTag = async()=>{
-  const tagName = yargs.tagName;
+
+  const tagName = argv.tagName.replace('refs/tags/','');
   const shortTagName = tagName.slice(0, tagName.indexOf('.'));
   const gitService = await GitService.init(repoDir, remoteUrl, authorName, authorEmail);
-  await gitService.raw(['tag', '-fa', tagName, '-m',`chore(release): update tag '${shortTagName}' to latest version '${tagName}'`])
-  await gitService.push(tagName, true);
+  const currentBranch = (await gitService.raw(['rev-parse', '--abbrev-ref', 'HEAD'])).trim();
+
+  console.log(`Moving to tag: '${tagName}'`);
+  await gitService.raw(['checkout', tagName]);
+
+  console.log(`Updating tag: '${shortTagName}' to '${tagName}'`);
+  await gitService.raw(['tag', '-fa', shortTagName, '-m',`chore(release): update tag '${shortTagName}' to latest version '${tagName}'`])
+  
+  console.log(`Pushing changes to tag: '${shortTagName}'`);
+  await gitService.push(shortTagName, true);
+
+  console.log(`Moving back to branch: '${currentBranch}'`);
+  await gitService.raw(['checkout', currentBranch]);
 }
 updateTag.description = `Update the given tag to latest version`;
 
