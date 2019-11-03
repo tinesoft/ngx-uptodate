@@ -1,20 +1,9 @@
 import gulp from 'gulp';
-import pump from 'pump';
 import del from 'del';
-import jest from 'jest';
 import { join, resolve} from 'path';
 import { lstatSync, readdirSync }  from 'fs';
-import yargs from 'yargs';
 
-import gulpCoveralls from 'zyan-gulp-coveralls';
-import { GitService } from './lib/git.service';
 import { execExternalCmd } from './utility/helpers';
-
-const argv = yargs.option('tagName',{
-  alias:'t',
-  type: 'string',
-  description: 'The tag name'
-}).argv;
 
 const config = {
   srcDir: 'src',
@@ -24,12 +13,6 @@ const config = {
   indentSpaces: 2
 };
 
-// Git 
-const repoDir = __dirname;
-const repoToken = process.env.GITHUB_TOKEN || process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN;
-const remoteUrl = `https://x-access-token:${repoToken}@github.com/tinesoft/ngx-uptodate`;
-const authorName = 'ngx-uptodate[bot]';
-const authorEmail = `ngx-uptodate@users.noreply.github.com`;
 
 // Cleaning tasks
 export const cleanBuild = () => del([config.buildDir]);
@@ -47,27 +30,9 @@ export const compile = () => execExternalCmd('npm', 'run build');
 compile.description = `Compile *.ts  files in '${config.srcDir}/'`;
 
 // Testing tasks
-export const test = () => {
-  let isTravis = !!process.env.TRAVIS;
-  return jest.runCLI({ config: require('./package.json').jest, coverage: true, runInBand: isTravis, ci: isTravis }, ".")
-    .then(({ results }) => {
-      if (!results.success) throw new Error('There are test failures!');
-    });
-}
+export const test = () => execExternalCmd('npm', 'run test')
 test.description = `Run *.spec.ts test files located in '${config.srcDir}/' using Jest`;
 
-export const coveralls = (done) => {
-  if (!process.env.CI) {
-    done();
-  }
-
-  pump(
-    [
-      gulp.src(`${config.coverageDir}/lcov.info`),
-      gulpCoveralls()
-    ], done);
-}
-coveralls.description = `Upload coverage report on coveralls.io, when run on Travis CI`;
 
 //Releasing tasks
 export const release = () => execExternalCmd('npm', 'run semantic-release');
@@ -92,26 +57,5 @@ export const resetFixtures = async () => {
   });
 };
 resetFixtures.description = `Reset the fixtures to their initial git status`;
-
-export const updateTag = async()=>{
-
-  const tagName = argv.tagName.replace('refs/tags/','');
-  const shortTagName = tagName.slice(0, tagName.indexOf('.'));
-  const gitService = await GitService.init(repoDir, remoteUrl, authorName, authorEmail);
-  const currentBranch = (await gitService.raw(['rev-parse', '--abbrev-ref', 'HEAD'])).trim();
-
-  console.log(`Moving to tag: '${tagName}'`);
-  await gitService.raw(['checkout', tagName]);
-
-  console.log(`Updating tag: '${shortTagName}' to '${tagName}'`);
-  await gitService.raw(['tag', '-fa', shortTagName, '-m',`chore(release): update tag '${shortTagName}' to latest version '${tagName}'`])
-  
-  console.log(`Pushing changes to tag: '${shortTagName}'`);
-  await gitService.push(shortTagName, true);
-
-  console.log(`Moving back to branch: '${currentBranch}'`);
-  await gitService.raw(['checkout', currentBranch]);
-}
-updateTag.description = `Update the given tag to latest version`;
 
 export default build; //default task
