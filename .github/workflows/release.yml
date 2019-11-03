@@ -11,17 +11,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
         with:
-          ref: develop
+          fetch-depth: 3
 
-      - name: Set-up Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-
-      - name: Installing NPM modules
-        run: npm ci
-
-      - name: Releasing
+      - name: Semantic Releasing
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
