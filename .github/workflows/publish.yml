@@ -1,21 +1,15 @@
 name: "Release and Publish Action"
 on: 
-  push:
-    branches:
-      - master
+  create:
+
 jobs:
-  release-and-publish:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@master
         with:
           fetch-depth: 3
-
-      - name: Semantic Releasing
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release
 
       - name: Publishing  Action
         uses: technote-space/release-github-actions@v1
