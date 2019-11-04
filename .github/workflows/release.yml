@@ -1,4 +1,4 @@
-name: "Release and Publish Action"
+name: "Release Action"
 on: 
   push:
     branches:

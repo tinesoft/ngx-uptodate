@@ -1,6 +1,5 @@
-name: "Release and Publish Action"
-on: 
-  create:
+name: "Publish Action"
+on: create
 
 jobs:
   publish:
