@@ -2,7 +2,7 @@ name: "Publish Action"
 on: create
 
 jobs:
-  release:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,11 +16,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_NAME: ngx-uptodate[bot]
           COMMIT_EMAIL: ngx-uptodate@users.noreply.github.com
-          COMMIT_MESSAGE: "chore(realease): publishing new version from '${{github.ref}}' at '${{github.sha}}'"
+          COMMIT_MESSAGE: "chore(realease): publishing new version from '${{github.ref}}'"
           CREATE_MAJOR_VERSION_TAG: true
           CREATE_MINOR_VERSION_TAG: true
           CREATE_PATCH_VERSION_TAG: false
           OUTPUT_BUILD_INFO_FILENAME: build.json
           BRANCH_NAME: releases
-          CLEAN_TARGETS: ".[!.]*,__tests__,asssets,demo,src,utility,*.js,*.ts,*.json,*.lock,_config.yml"
+          CLEAN_TARGETS: ".[!.]*,__tests__,demo,src,utility,*.js,*.ts,*.json,*.lock,_config.yml"
           TEST_TAG_PREFIX: test/
