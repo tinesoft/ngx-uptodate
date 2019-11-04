@@ -7,7 +7,7 @@ on:
     - cron: '0 */8 * * *'
 
 jobs:
-  ngxUptodate:
+  ngx-uptodate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

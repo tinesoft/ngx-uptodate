@@ -1,8 +1,10 @@
-name: "Publish Action"
-on: create
-
+name: "Release and Publish Action"
+on: 
+  push:
+    branches:
+      - master
 jobs:
-  publish:
+  release-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -10,8 +12,13 @@ jobs:
         with:
           fetch-depth: 3
 
-      - name: Publish GitHub Actions
-        uses: technote-space/release-github-actions@test/v1
+      - name: Semantic Releasing
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Publishing  Action
+        uses: technote-space/release-github-actions@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_NAME: ngx-uptodate[bot]
