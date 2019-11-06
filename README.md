@@ -53,6 +53,13 @@ This is what the created PR will look like :
 
 ![Example of a PR created by the ngx-uptodate action](https://cdn.jsdelivr.net/gh/tinesoft/ngx-uptodate@develop/assets/ngx-uptodate-pr-dark.png "Example of a PR created by the ngx-uptodate action")
 
+## Outputs
+
+When the action successfully runs, it produces the following outputs, that you can use them in further steps in your workflow:
+
+* `pr-number`: the number of the PR that have been created on Github
+*  `ng-update-result` : an array of [PackageToUpdate](src/ngupdate.service.ts#L7), that summarizes the packages that have been updated.
+
 ## Contributing
 
 Contributions are always welcome! Just fork the project, work on your feature/bug fix, and submit it.
