@@ -14,6 +14,9 @@ inputs:
   repo-token:
     description: The GITHUB_TOKEN secret
     required: true
+  fetch-depth:
+    description: "The depth of commits to fetch on tip of 'base-branch' (default: unlimited)"
+    default:
   npm-registry:
     description: The NPM registry to use
     default:
