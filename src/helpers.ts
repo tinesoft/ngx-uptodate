@@ -34,7 +34,9 @@ export class Helpers {
         let options: ExecOptions = { 
             cwd: projectPath
         };
-        await exec.exec('npm',['ci'], options);
+
+        const useYarn = await Helpers.isFileExists(path.join(projectPath, 'yarn.lock'));
+        await (useYarn? exec.exec('yarn',['install'], options) : exec.exec('npm',['ci'], options));
     }
 
     public static getLocalNgExecPath(baseDir:string){
