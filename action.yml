@@ -49,6 +49,9 @@ inputs:
   pr-reviewers:
     description: The users that should review the PR(comma separated)
     default:
+  delete-closed-pr-branches:
+    description: Auto delete branches of previous PRs that have been closed
+    default: true
 outputs:
   pr-number:
     description: The number of the created/updated PR

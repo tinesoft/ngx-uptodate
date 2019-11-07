@@ -51,9 +51,10 @@ async function run() {
     core.info(`🤖 Prerequisites are done. Trying to 'ng update' your code now...`);
     const ngUpdateResult = await ngService.runUpdate();
 
+    const prTitle = core.getInput('pr-title');
+    const prBranchPrefix = core.getInput('pr-branch-prefix');
+
     if (gitService.hasChanges()) {
-      const prTitle = core.getInput('pr-title');
-      const prBranchPrefix = core.getInput('pr-branch-prefix');
       const prBody = Helpers.getPrBody(core.getInput('pr-body'), ngUpdateResult.ngUpdateOutput);
       const prLabels = Helpers.getPrAssignees(core.getInput('pr-labels'));
       const prAssignees = Helpers.getPrAssignees(core.getInput('pr-assignees'));
@@ -90,6 +91,11 @@ async function run() {
     else
       core.info(`🤖 Running 'ng update' has produced no change in your code, you must be up-to-date already 👏!`)
 
+    const deleteClosedPRBranches = core.getInput('delete-closed-pr-branches') == 'true';
+    if(deleteClosedPRBranches){
+        core.info(`🤖 Deleting branches related to closed PRs created by this action...`)
+        await gbService.deleteClosedPRsBranches(baseBranch,prBranchPrefix, prTitle);
+    }
     core.setOutput('ng-update-result', JSON.stringify(ngUpdateResult.packages));
   } catch (error) {
     core.setFailed(error.message);

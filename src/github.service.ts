@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { GitHub } from '@actions/github';
 import { Context } from '@actions/github/lib/context';
+import { stringLiteral } from '@babel/types';
 
 export class GithubService {
 
@@ -48,6 +49,39 @@ export class GithubService {
 
     return null;
   }
+
+  public async getClosedPRsBranches(base: string, title:string, branchSuffix:string): Promise<string[]> {
+
+    const res = await this.gbClient.pulls.list({
+      owner: this.owner,
+      repo: this.repo,
+      state: 'closed',
+      base
+    });
+
+    return res.data//
+      .filter(pr => !pr.locked)//
+      .filter(pr => !pr.merged_at )//
+      .filter(pr => pr.head.ref.indexOf(branchSuffix)>0 || pr.title == title )//
+      .map(pr => pr.head.ref);
+  }
+
+  public async deleteClosedPRsBranches(base: string, title:string, branchSuffix:string): Promise<void> {
+   const branches = await this.getClosedPRsBranches(base, title, branchSuffix);
+   for(let branch in branches){
+      let res = await this.gbClient.git.deleteRef({
+                  owner: this.owner,
+                  repo: this.repo,
+                  ref: branch
+                });
+      if(res.status == 204)
+        core.debug(`🤖 >> Branch '${branch}' has been deleted`);
+      else if(res.status != 422) //422 = branch already gone
+        core.warning(`🤖 >> Branch '${branch}' could not be deleted. Status was: ${res.status}`);
+   }
+  }
+
+
 
   public async createPR(base: string, head: string, title: string, body: string, assignees: string[], reviewers: string[], labels: string[]): Promise<number | null> {
     try {
