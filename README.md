@@ -32,13 +32,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
 
-      - name: Set-up Node 
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Installing NPM modules
-        run: npm ci
-
       - name: Updating ng dependencies # the magic happens here !
         uses: tinesoft/ngx-uptodate@master
         with:
