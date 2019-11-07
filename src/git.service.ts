@@ -5,21 +5,20 @@ export class GitService {
 
     private git: simplegit.SimpleGit;
 
-    private constructor(private repoDir: string) {
+    public constructor(private repoDir: string) {
         this.git = simplegit(repoDir);
     }
 
-    private async initGit(remoteUrl: string, authorName: string, authorEmail: string): Promise<void> {
+    public async clone(repoUrl: string, depth?: string): Promise<void> {
+        await this.git.clone(repoUrl, this.repoDir, {...(depth && {'--depth':depth})});
+    }
+
+    public async init(remoteUrl: string, authorName: string, authorEmail: string): Promise<void> {
         await this.git.addConfig('user.name', authorName);
         await this.git.addConfig('user.email', authorEmail);
         await this.git.remote(['set-url','origin', remoteUrl]);
     }
 
-    public static async init(repoDir: string, remoteUrl: string, authorName: string, authorEmail: string): Promise<GitService> {
-        const client = new GitService(repoDir);
-        await client.initGit(remoteUrl, authorName, authorEmail);
-        return client;
-    }
 
     public async hasChanges(): Promise<boolean> {
         const status = await this.git.status();
@@ -29,10 +28,6 @@ export class GitService {
     public async remoteBranchExists(branch: string): Promise<boolean> {
         const remotes = await this.git.branch(['-r']);
         return remotes.all.includes(`origin/${branch}`);
-    }
-
-    public async clone(): Promise<void> {
-        await this.git.clone(this.repoDir);
     }
 
     public async checkoutBranch(branch: string): Promise<void> {

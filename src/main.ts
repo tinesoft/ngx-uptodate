@@ -20,20 +20,23 @@ async function run() {
 
     const gbClient = new github.GitHub(repoToken);
     const ngService = new NgUpdateService(projectPath);
-    const gitService = await GitService.init(repoDir, remoteUrl, authorName, authorEmail);
+    const gitService = new GitService(repoDir);
     const gbService = new GithubService(gbClient, context);
 
-    core.debug(`🤖 Checking if received Github event should be ignored...`);
+    core.info(`🤖 Checking if received Github event should be ignored...`);
     if (gbService.shouldIgnoreEvent(baseBranch)) {
       return;
     }
 
     if (Helpers.isFolderEmpty(repoDir)) {
-      core.warning(`🤖 Repo directory at: '${repoDir}' is empty. Did you forget to add a '@actions/checkout' step in your Workflow?`);
-      core.debug(`🤖 That's alright, i will check the repository out for you, human friend!`);
-
-      await gitService.clone();
+      
+      const fetchDepth = core.getInput('fetch-depth');
+      core.info(`🤖 Repo directory at: '${repoDir}' is empty. Checking out from: '${remoteUrl}'...`);
+      await gitService.clone(remoteUrl, fetchDepth);
     }
+
+    core.debug(`🤖 Intializing git config at: '${repoDir}'`);
+    await gitService.init(remoteUrl, authorName, authorEmail);
 
     core.debug(`🤖 Moving git head to base branch: ${baseBranch}`);
     await gitService.checkoutBranch(baseBranch);
@@ -45,7 +48,7 @@ async function run() {
       return;
     }
 
-    core.info(`🤖 All prerequisite are done. Trying to ng update your code now...`);
+    core.info(`🤖 Prerequisites are done. Trying to 'ng update' your code now...`);
     const ngUpdateResult = await ngService.runUpdate();
 
     if (gitService.hasChanges()) {

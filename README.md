@@ -29,9 +29,6 @@ jobs:
   ngxUptodate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@master
-
       - name: Updating ng dependencies # the magic happens here !
         uses: tinesoft/ngx-uptodate@master
         with:
