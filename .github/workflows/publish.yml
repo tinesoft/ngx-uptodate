@@ -22,5 +22,5 @@ jobs:
           CREATE_PATCH_VERSION_TAG: false
           OUTPUT_BUILD_INFO_FILENAME: build.json
           BRANCH_NAME: releases
-          CLEAN_TARGETS: ".[!.]*,__tests__,demo,src,utility,*.js,*.ts,*.json,*.lock,_config.yml"
+          CLEAN_TARGETS: ".[!.]*,__tests__,assets,demo,src,utility,*.js,*.ts,*.json,*.lock,_config.yml"
           TEST_TAG_PREFIX: test/
