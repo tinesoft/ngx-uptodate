@@ -1,6 +1,6 @@
 {
   "name": "ngx-uptodate",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "a Github action that keeps your Angular CLI-based projects up-to-date with @angular via automated pull requests.",
   "main": "lib/main.js",
   "scripts": {
@@ -72,11 +72,6 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/github"
-    ],
-    "pkgRoot": "lib",
-    "assets": [
-      "lib/*.zip",
-      "lib/*.tar.gz"
     ]
   }
 }

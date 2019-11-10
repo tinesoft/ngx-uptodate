@@ -19,7 +19,7 @@ jobs:
           COMMIT_MESSAGE: "chore(realease): publishing new version from '${{github.ref}}'"
           CREATE_MAJOR_VERSION_TAG: true
           CREATE_MINOR_VERSION_TAG: true
-          CREATE_PATCH_VERSION_TAG: false
+          CREATE_PATCH_VERSION_TAG: true
           OUTPUT_BUILD_INFO_FILENAME: build.json
           BRANCH_NAME: releases
           CLEAN_TARGETS: ".[!.]*,__tests__,assets,demo,src,utility,*.js,*.ts,*.json,*.lock,_config.yml"
