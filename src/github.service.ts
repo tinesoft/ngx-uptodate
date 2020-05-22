@@ -41,7 +41,7 @@ export class GithubService {
       repo: this.repo,
       state: 'open',
       base,
-      head
+      head: `${this.owner}:${head}`
     });
 
     for (let i = 0; i < res.data.length; i++)
