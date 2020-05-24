@@ -1,4 +1,5 @@
 __tests__/runner/*
+__tests__/fixtures/fxt-modified/*
 
 # comment out in distribution branches
 node_modules/
