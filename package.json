@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
+    "stest": "jest --silent",
     "cover": "jest --coverage",
     "semantic-release": "semantic-release",
     "update": "npx npm-check-updates -u && npm install && npm audit"
