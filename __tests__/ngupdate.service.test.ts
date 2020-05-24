@@ -45,7 +45,7 @@ describe('NgUpdateService Tests', () => {
     beforeAll(resetFixtures, 600000);
     afterAll(resetFixturesGitStatus, 600000);
 
-    fit('runUpdate1: should return packages to update if project is outdated', async () => {
+    it('runUpdate1: should return packages to update if project is outdated', async () => {
         const projectPath = path.join(testRootDir, 'fixtures', 'fxt-toupdate');
         const ngUpdateService = new NgUpdateService(projectPath);
         const result = await ngUpdateService.runUpdate();
