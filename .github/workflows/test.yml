@@ -10,11 +10,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+      - name: Checkout repository
+        uses: actions/checkout@master
 
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - uses: ./
-      with: 
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set-up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Installing NPM modules
+        run: npm ci
+
+      - name: Building action
+        run: npm run build
+
+      - name: Running tests
+        run: npm test
+      - uses: ./
+        with: 
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
