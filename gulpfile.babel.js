@@ -56,7 +56,7 @@ export const resetFixtures = async () => {
       await execExternalCmd('git', `checkout HEAD -- ${fixtureDir}/`, options);
       await execExternalCmd('git', `clean -fd ${fixtureDir}/`, options);
 
-      if(f === 'fxt-uptodate')
+      if(name === 'fxt-uptodate')
         return;
       console.log(`Reinstalling  Node modules of fixture at: ${fixtureDir}`);
       await execExternalCmd('npm', 'ci', options);
