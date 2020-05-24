@@ -10,12 +10,6 @@ A [Github Action](https://github.com/features/actions) that keeps your Angular C
 The action automatically runs `ng update` for you, updates @angular related dependencies and files, and creates/updates a PR with the changes.
 You just have to merge the created PR back into your codebase, once ready.
 
-> **Note**: GitHub Actions are currently in public beta. Please [register for
-> access](https://github.com/features/actions) to start using the feature. Until you or your
-> GitHub organization has been approved for the beta, the **Actions** tab above won't show in
-> your repos, and the Actions-related YAML files described below will not be recognized by
-> GitHub.
-
 ## Usage
 
 To get started, create a workflow under `.github/workflows/` folder (eg: `.github/workflows/ngx-uptodate.yml`), with the following content:
@@ -48,7 +42,7 @@ This is what the created PR will look like :
 When the action successfully runs, it produces the following outputs, that you can use them in further steps in your workflow:
 
 * `pr-number`: the number of the PR that have been created on Github
-*  `ng-update-result` : an array of [PackageToUpdate](src/ngupdate.service.ts#L7), that summarizes the packages that have been updated.
+* `ng-update-result` : an array of [PackageToUpdate](src/ngupdate.service.ts#L7), that summarizes the packages that have been updated.
 
 ## Contributing
 
@@ -61,4 +55,4 @@ Kudos 👍🏾to people at [Codestar](https://www.codestar.nl/) and their [blog 
 
 ## License
 
-Copyright (c) 2019 Tine Kondo. Licensed under the MIT License (MIT)
+Copyright (c) 2020 Tine Kondo. Licensed under the MIT License (MIT)
