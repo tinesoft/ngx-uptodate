@@ -50,10 +50,16 @@ export const resetFixtures = async () => {
       if(name == 'fxt-modified')
         return;
 
-      let fixtureDir = join(fixturesDir, name);
-      console.log(`Reseting fixture at: ${fixtureDir}`);
-      await execExternalCmd('git', `checkout HEAD -- ${fixtureDir}/`);
-      await execExternalCmd('git', `clean -fd ${fixtureDir}/`);
+      const fixtureDir = join(fixturesDir, name);
+      const options =  {cwd: fixtureDir};
+      console.log(`Resetting  Git status of fixture at: ${fixtureDir}`);
+      await execExternalCmd('git', `checkout HEAD -- ${fixtureDir}/`, options);
+      await execExternalCmd('git', `clean -fd ${fixtureDir}/`, options);
+
+      if(f === 'fxt-uptodate')
+        return;
+      console.log(`Reinstalling  Node modules of fixture at: ${fixtureDir}`);
+      await execExternalCmd('npm', 'ci', options);
   });
 };
 resetFixtures.description = `Reset the fixtures to their initial git status`;
