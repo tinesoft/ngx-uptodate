@@ -1,7 +1,9 @@
 name: "Test JavaScript Action"
 on:
+  pull_request:
   push:
     branches:    
+      - develop
       - 'releases/*'   # only run in release distribution branches
 
 jobs:
